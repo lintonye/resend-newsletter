@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Subscriber {
+  id        String             @id @default(uuid())
+  firstName String
+  email     String             @unique
+  createdAt DateTime           @default(now())
+  updatedAt DateTime           @updatedAt
+  country   String
+  status    SubscriberStatus   @default(ACTIVE)
+  campaigns CampaignDelivery[]
+}
+
+model Campaign {
+  id                   String             @id @default(uuid())
+  name                 String
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  emailSubjectTemplate String
+  emailBodyTemplate    String
+  deliveries           CampaignDelivery[]
+}
+
+model CampaignDelivery {
+  id           String                 @id @default(uuid())
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  campaign     Campaign               @relation(fields: [campaignId], references: [id])
+  campaignId   String
+  subscriber   Subscriber             @relation(fields: [subscriberId], references: [id])
+  subscriberId String
+  status       CampaignDeliveryStatus @default(PENDING)
+  error        String?
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+enum CampaignDeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+}
