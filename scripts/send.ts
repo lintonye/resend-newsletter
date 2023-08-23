@@ -1,5 +1,6 @@
 import { Campaign, PrismaClient, Subscriber } from "@prisma/client";
 import { Resend } from "resend";
+import MarkdownIt from "markdown-it";
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -32,6 +33,11 @@ function getErrorMessage(e: unknown) {
   return JSON.stringify(e);
 }
 
+async function markdownToHtml(markdown: string) {
+  const md = new MarkdownIt();
+  return md.render(markdown);
+}
+
 async function deliverCampaign(subscriber: Subscriber, campaign: Campaign) {
   const from = "Linton Ye <linton@jimulabs.com>";
 
@@ -44,12 +50,14 @@ async function deliverCampaign(subscriber: Subscriber, campaign: Campaign) {
   });
 
   try {
+    const bodyText = format(campaign.emailBodyTemplate, subscriber);
+    const bodyHtml = await markdownToHtml(bodyText);
     const response = await resend.emails.send({
       from,
       to: subscriber.email,
       subject: format(campaign.emailSubjectTemplate, subscriber),
-      text: format(campaign.emailBodyTemplate, subscriber),
-      // html: "<b>Hello world</b>",
+      text: bodyText,
+      html: bodyHtml,
     });
     await prisma.campaignDelivery.update({
       where: {
@@ -118,7 +126,7 @@ Linton
   return campaign;
 }
 
-async function main() {
+async function main2() {
   const campaign = await getAiAppsIntroCampaign();
   const subscribers = await getSubscribersToDeliver(campaign);
   console.log(
@@ -144,7 +152,12 @@ async function main() {
   }
 }
 
-main().catch((e) => {
+async function main() {
+  const html = await markdownToHtml(`# Hello World`);
+  console.log(html);
+}
+
+main().catch((e: any) => {
   console.error(e);
   process.exit(1);
 });
