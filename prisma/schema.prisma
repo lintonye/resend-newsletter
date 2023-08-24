@@ -19,6 +19,7 @@ model Subscriber {
   country   String
   status    SubscriberStatus   @default(ACTIVE)
   campaigns CampaignDelivery[]
+  tags      String[]           @default([])
 }
 
 model Campaign {

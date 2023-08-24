@@ -108,15 +108,16 @@ You must have tried ChatGPT or Midjourney, right? It's no doubt a big hype right
 
 I've since been learning and experimenting like crazy. Out of the 43 subfolders in my "ai-experiments" folder, there are 2 that I think are worth sharing with you. 
 
-The first one is a tool called Painboard. Can you guess what it does? It uses AI (of course!) to automatically extract customer pain points (or other actionable insights) from long-form customer feedback, such as reviews, transcripts, support tickets etc. I've seen people using it to analyze focus group meeting notes, employee reviews and product reviews. If you are a PM or designer, does it sound useful? Check it out and I'd love to hear your feedback. https://usepainboard.com
+The first one is a tool called Painboard. Can you guess what it does? It uses AI (of course!) to automatically extract customer pain points (or other actionable insights) from long-form customer feedback, such as reviews, transcripts, support tickets etc. I've seen people using it to analyze focus group meeting notes, employee reviews and product reviews. If you are a PM or designer, does it sound useful? Check it out and I'd love to hear your feedback. [https://usepainboard.com](https://usepainboard.com)
 
-The second one is a "ChatGPT for your website" tool. It lets a user easily train and embed a GPT-powered chatbot on websites. Honestly there are already a few dozen similar tools out there, but I've decided to focuses on the ease of use and customizability. BTW I'm pretty proud of the theme editor and hope you like the design too (and its name, Chattie). Fun fact, Chattie is the "new app" mentioned on Painboard's landing page. Here's the link: https://usechattie.com
+The second one is a "ChatGPT for your website" tool. It lets a user easily train and embed a GPT-powered chatbot on websites. Honestly there are already a few dozen similar tools out there, but I've decided to focuses on the ease of use and customizability. BTW I'm pretty proud of the theme editor and hope you like the design too (and its name, Chattie). Fun fact, Chattie is the "new app" mentioned on Painboard's landing page. Here's the link: [https://usechattie.com](https://usechattie.com)
 
 Thanks for reading this far. While this email is not about React courses, I hope you still find it interesting. How's your jounery of learning React (and anything else)? Do you have any questions for me? I'd like to open up a conversation with you, and see if I can help you in any way.
 
-PS: In the spirit of building in public, I'll try to share every aspect of my journey, both in the form of newsletter and on Twitter (well, X). Stay tuned!
+_PS: In the spirit of building in public, I'll try to share every aspect of my journey, both in the form of newsletter and on Twitter (well, X). Stay tuned!_
 
 Thanks, and have a great day!
+
 Linton
 `;
   let campaign = await prisma.campaign.findFirst({
@@ -135,7 +136,7 @@ Linton
   return campaign;
 }
 
-async function main2() {
+async function main() {
   const campaign = await getReengageCampaign();
   const subscribers = await getSubscribersToDeliver(campaign);
   console.log(
@@ -143,10 +144,10 @@ async function main2() {
   );
 
   // split subscribers into 10-batch
-  const batchCount = 10;
-  const batchLength = Math.ceil(subscribers.length / batchCount);
+  const batchSize = 10;
+  const batchCount = Math.ceil(subscribers.length / batchSize);
   for (let i = 0; i < batchCount; i++) {
-    const batch = subscribers.slice(i * batchLength, (i + 1) * batchLength);
+    const batch = subscribers.slice(i * batchSize, (i + 1) * batchSize);
     try {
       await Promise.all(
         batch.map((subscriber) => deliverCampaign(subscriber, campaign))
@@ -161,13 +162,13 @@ async function main2() {
   }
 }
 
-async function main() {
-  const campaign = await getReengageCampaign();
-  const subscribers = await getSubscribersToDeliver(campaign);
-  console.log(
-    `Delivering "${campaign.name}" to ${subscribers.length} subscribers`
-  );
-}
+// async function main() {
+//   const campaign = await getReengageCampaign();
+//   const subscribers = await getSubscribersToDeliver(campaign);
+//   console.log(
+//     `Delivering "${campaign.name}" to ${subscribers.length} subscribers`
+//   );
+// }
 
 main().catch((e: any) => {
   console.error(e);
