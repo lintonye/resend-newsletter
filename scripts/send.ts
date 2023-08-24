@@ -7,15 +7,20 @@ const prisma = new PrismaClient();
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function getSubscribersToDeliver(campaign: Campaign) {
+  const alreadyDeliveredSubs = await prisma.campaignDelivery.findMany({
+    where: {
+      campaignId: campaign.id,
+      OR: [{ status: "SENT" }, { status: "PENDING" }],
+    },
+    select: {
+      subscriberId: true,
+    },
+  });
+
   const subscribers = await prisma.subscriber.findMany({
     where: {
       status: "ACTIVE",
-      campaigns: {
-        none: {
-          id: campaign.id,
-          OR: [{ status: "SENT" }, { status: "PENDING" }],
-        },
-      },
+      id: { notIn: alreadyDeliveredSubs.map((x) => x.subscriberId) },
     },
   });
 
@@ -23,7 +28,7 @@ async function getSubscribersToDeliver(campaign: Campaign) {
 }
 
 function format(template: string, subscriber: Subscriber) {
-  return template.replace(/\{firstName\}/g, subscriber.firstName);
+  return template.replace(/\{firstName\}/g, subscriber.firstName ?? "");
 }
 
 function getErrorMessage(e: unknown) {
@@ -136,7 +141,7 @@ Linton
   return campaign;
 }
 
-async function main() {
+async function main2() {
   const campaign = await getReengageCampaign();
   const subscribers = await getSubscribersToDeliver(campaign);
   console.log(
@@ -162,13 +167,13 @@ async function main() {
   }
 }
 
-// async function main() {
-//   const campaign = await getReengageCampaign();
-//   const subscribers = await getSubscribersToDeliver(campaign);
-//   console.log(
-//     `Delivering "${campaign.name}" to ${subscribers.length} subscribers`
-//   );
-// }
+async function main() {
+  const campaign = await getReengageCampaign();
+  const subscribers = await getSubscribersToDeliver(campaign);
+  console.log(
+    `Delivering "${campaign.name}" to ${subscribers.length} subscribers`
+  );
+}
 
 main().catch((e: any) => {
   console.error(e);

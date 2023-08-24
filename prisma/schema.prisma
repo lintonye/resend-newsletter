@@ -11,12 +11,14 @@ datasource db {
 }
 
 model Subscriber {
-  id        String             @id @default(uuid())
-  firstName String
+  id        String             @id @default(dbgenerated("(concat('sub_', gen_random_uuid()))::TEXT"))
+  firstName String?
   email     String             @unique
   createdAt DateTime           @default(now())
   updatedAt DateTime           @updatedAt
-  country   String
+  city     String?
+  state     String?
+  country   String?
   status    SubscriberStatus   @default(ACTIVE)
   campaigns CampaignDelivery[]
   tags      String[]           @default([])
