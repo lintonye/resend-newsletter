@@ -2,7 +2,10 @@ export type EmailTemplate = {
   name: string;
   emailSubjectTemplate: string;
   emailBodyTemplate: string;
+  signature?: string;
 };
+
+export const defaultSignautre = `Linton Ye<br/>Thinking aloud on [Twitter, aka X](https://x.com/lintonye)`;
 
 export const reengagement20230825: EmailTemplate = {
   name: "Re-engagement",
@@ -24,7 +27,5 @@ export const reengagement20230825: EmailTemplate = {
   _PS: In the spirit of building in public, I'll try to share every aspect of my journey, both in the form of newsletter and on Twitter (well, X). Stay tuned!_
   
   Thanks, and have a great day!
-  
-  Linton
   `,
 };

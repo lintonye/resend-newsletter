@@ -1,7 +1,11 @@
 import { Campaign, Prisma, PrismaClient, Subscriber } from "@prisma/client";
 import { Resend } from "resend";
 import MarkdownIt from "markdown-it";
-import { EmailTemplate, reengagement20230825 } from "./emailTemplates";
+import {
+  EmailTemplate,
+  reengagement20230825,
+  defaultSignautre,
+} from "./emailTemplates";
 require("dotenv").config();
 
 const prisma = new PrismaClient();
@@ -116,10 +120,11 @@ async function getCampaign(template: EmailTemplate) {
   });
 
   if (!campaign) {
+    const signature = template.signature ?? defaultSignautre;
     campaign = await createCampaign(
       name,
       emailSubjectTemplate,
-      emailBodyTemplate
+      emailBodyTemplate + (signature ? `\n\n${signature}` : "")
     );
   }
   return campaign;
