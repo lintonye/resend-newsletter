@@ -5,7 +5,7 @@ export type EmailTemplate = {
   signature?: string;
 };
 
-export const defaultSignautre = `Linton Ye<br/>Thinking aloud on [Twitter, aka X](https://x.com/lintonye)`;
+export const defaultSignature = `Linton Ye<br/>Thinking aloud on [Twitter, aka X](https://x.com/lintonye)`;
 
 export const reengagement20230825: EmailTemplate = {
   name: "Re-engagement",

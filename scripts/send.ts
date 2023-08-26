@@ -4,7 +4,7 @@ import MarkdownIt from "markdown-it";
 import {
   EmailTemplate,
   reengagement20230825,
-  defaultSignautre,
+  defaultSignature,
 } from "./emailTemplates";
 require("dotenv").config();
 
@@ -120,7 +120,7 @@ async function getCampaign(template: EmailTemplate) {
   });
 
   if (!campaign) {
-    const signature = template.signature ?? defaultSignautre;
+    const signature = template.signature ?? defaultSignature;
     campaign = await createCampaign(
       name,
       emailSubjectTemplate,
