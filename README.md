@@ -10,4 +10,5 @@ With the $20/month plan at Resend.com (for 50K emails), the price would be much 
 2. Put the API key into `.env`
 3. Initialize the local db via `npx supabase start`. Docker is needed for this step.
 4. `yarn`
-5. `npx ts-node scripts/send.ts`
+5. `npx prisma migrate deploy`
+6. `npx ts-node scripts/send.ts`
